@@ -1,4 +1,4 @@
-
+  
 #define NOTE_F5  698
 #define NOTE_G5  784
 #define NOTE_E5  659
@@ -9,6 +9,8 @@ void StartEnconder();
 extern int LED;
 extern Servo myservo;
 extern int speakerPin;
+
+
 
 void StartEnconder(){
   pinMode(LED, OUTPUT);
