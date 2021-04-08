@@ -102,7 +102,6 @@ long int data;
 int LED = 7;
 int LEDGREEN = 6;
 int LEDRED = 5;
-int ledPin = 13; //For visual as well
 int speakerPin  = 4;
 long int password1 = 92;
 long int password2 = 79;
@@ -111,31 +110,35 @@ char state = 0;
 Servo myservo;
 int pos = 0;
 
+//  Extern Functions
+extern void putWater();
+extern void StartEnconder();
+
    
 void setup()   
 {
   wdt_disable();
-  pinMode(ledPin, OUTPUT); // Setting both pins to outputs
   pinMode(LED, OUTPUT);
   pinMode(LEDGREEN, OUTPUT);
   pinMode(LEDRED, OUTPUT);
   pinMode(speakerPin , OUTPUT);
-  digitalWrite(LED, LOW);
-  digitalWrite(LEDGREEN, LOW);
-  digitalWrite(LEDRED, HIGH);
   myservo.attach(12);
   myservo.write(0);  
   song();
+  digitalWrite(LED, LOW);
+  digitalWrite(LEDGREEN, LOW);
+  digitalWrite(LEDRED, HIGH);
   
   // Open serial communications and wait for port to open:  
   Serial.begin(115200);  
   Serial.println("Bem Vindo!");  
   // SoftwareSerial "com port" data rate. JY-MCU v1.03 defaults to 9600.  
   mySerial.begin(9600);
+  StartEnconder(); 
 }  
    
 void loop()  
-{ 
+{
   while (mySerial.available() != 0){
   digitalWrite(LEDGREEN, LOW);
   digitalWrite(LEDRED, HIGH);
@@ -162,17 +165,9 @@ void loop()
   Serial.println("LED OFF "); 
   digitalWrite(LEDGREEN, LOW);
   digitalWrite(LEDRED, HIGH);
-  //wdt_enable(WDTO_1S);
-  //wdt_reset();
+  wdt_enable(WDTO_1S);
   }
   if(data == 01){
-    
-  digitalWrite(LEDGREEN, HIGH);
-  digitalWrite(LEDRED, LOW);
-  delay(200);
-  digitalWrite(LEDGREEN, LOW);
-  digitalWrite(LEDRED, HIGH);
-  delay(200);
   digitalWrite(LEDGREEN, HIGH);
   digitalWrite(LEDRED, LOW);
   beep(speakerPin, NOTE_C6, 100);
@@ -180,8 +175,6 @@ void loop()
   beep(speakerPin, NOTE_A5, 100);
   delay(300);
   }
-
-
 
   
   // Read device output if available.  
@@ -204,32 +197,9 @@ void loop()
    
 }// END loop()  
 
-void putWater(){
-  digitalWrite(LED, HIGH);
-  Serial.println("Puting Water ");
-  myservo.write(380);              // tell servo to go to position in variable 'pos'
-  delay(2000);
-      
-  myservo.write(0);              // tell servo to go to position in variable 'pos'
-  delay(90);
-  digitalWrite(LED, LOW);
-  delay(305);
-  digitalWrite(LED, HIGH);
-  delay(305);
-  digitalWrite(LED, LOW);
-  delay(100);
-  Serial.println("Puting Water End ");
-  beep(speakerPin, NOTE_F5, 100);
-  delay(100);
-  beep(speakerPin, NOTE_G5, 100);
-  delay(100);
-  beep(speakerPin, NOTE_E5, 100);
-  delay(500);
-}
 
 void beep (unsigned char speakerPin, int frequencyInHertz, long timeInMilliseconds)  //code for working out the rate at which each note plays and the frequency.
 {
-  digitalWrite(ledPin, HIGH);
   int x;     
   long delayAmount = (long)(1000000/frequencyInHertz);
   long loopTime = (long)((timeInMilliseconds*1000)/(delayAmount*2));
@@ -240,7 +210,6 @@ void beep (unsigned char speakerPin, int frequencyInHertz, long timeInMillisecon
     digitalWrite(speakerPin,LOW);
     delayMicroseconds(delayAmount);
   }   
-  digitalWrite(ledPin, LOW);
   delay(20);
 }    
 
@@ -296,5 +265,4 @@ void song()  //here is where all the notes for the song are played.
   beep(speakerPin, NOTE_G5, 100);
   delay(100);
   beep(speakerPin, NOTE_E5, 100);
-  digitalWrite(ledPin, HIGH);
 }
