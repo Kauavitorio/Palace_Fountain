@@ -1,3 +1,4 @@
+
 #define NOTE_B0  31
 #define NOTE_C1  33
 #define NOTE_CS1 35
@@ -87,11 +88,39 @@
 #define NOTE_CS8 4435
 #define NOTE_D8  4699
 #define NOTE_DS8 4978
+#define REST 0
+
 
 void beep();
 void song();
 
 extern int speakerPin;
+
+// change this to make the song slower or faster
+int tempo = 140;
+int melody[] = {
+
+
+  // Hedwig's theme fromn the Harry Potter Movies
+  // Socre from https://musescore.com/user/3811306/scores/4906610
+  
+  REST, 2, NOTE_D4, 4,
+  NOTE_G4, -4, NOTE_AS4, 8, NOTE_A4, 4,
+  NOTE_G4, 2, NOTE_D5, 4,
+  NOTE_C5, -2, 
+  NOTE_A4, -2,
+
+};
+
+
+// sizeof gives the number of bytes, each int value is composed of two bytes (16 bits)
+// there are two values per note (pitch and duration), so for each note there are four bytes
+int notes = sizeof(melody) / sizeof(melody[0]) / 2;
+
+// this calculates the duration of a whole note in ms (60s/tempo)*4 beats
+int wholenote = (60000 * 4) / tempo;
+
+int divider = 0, noteDuration = 0;
 
 
 void StartEnconderSond(){
@@ -117,53 +146,28 @@ void beep (unsigned char speakerPin, int frequencyInHertz, long timeInMillisecon
 
 void song()  //here is where all the notes for the song are played.
 {       
-  beep(speakerPin, NOTE_D5, 100);  //   beep( -PIN OF SPEAKER-, -THE NOTE WANTING TO BE PLAYED-, -DURATION OF THE NOTE IN MILISECONDS- )
-  delay(80);
-  beep(speakerPin, NOTE_F5, 100);
-  delay(80);
-  beep(speakerPin, NOTE_D6, 200);
-  delay(250);
- 
-  beep(speakerPin, NOTE_D5, 100);
-  delay(80);
-  beep(speakerPin, NOTE_F5, 100);
-  delay(80);
-  beep(speakerPin, NOTE_D6, 200);
-  delay(250);
- 
-  beep(speakerPin, NOTE_E6, 200);
-  delay(200);
-  beep(speakerPin, NOTE_F6, 100);
-  delay(100);
-  beep(speakerPin, NOTE_E6, 100);
-  delay(80);
-  beep(speakerPin, NOTE_F6, 100);
-  delay(80);
-  beep(speakerPin, NOTE_E6, 100);
-  delay(80);
-  beep(speakerPin, NOTE_C6, 100);
-  delay(80);
-  beep(speakerPin, NOTE_A5, 100);
-  delay(300);
- 
-  beep(speakerPin, NOTE_A5, 200);
-  delay(100);
-  beep(speakerPin, NOTE_D5, 200);
-  delay(100);
-  beep(speakerPin, NOTE_F5, 100);
-  delay(100);
-  beep(speakerPin, NOTE_G5, 100);
-  delay(100);
-  beep(speakerPin, NOTE_A5, 100);
-  delay(500);
- 
-  beep(speakerPin, NOTE_A5, 200);
-  delay(100);
-  beep(speakerPin, NOTE_D5, 200);
-  delay(100);
-  beep(speakerPin, NOTE_F5, 100);
-  delay(100);
-  beep(speakerPin, NOTE_G5, 100);
-  delay(100);
-  beep(speakerPin, NOTE_E5, 100);
+  // iterate over the notes of the melody. 
+  // Remember, the array is twice the number of notes (notes + durations)
+  for (int thisNote = 0; thisNote < notes * 2; thisNote = thisNote + 2) {
+
+    // calculates the duration of each note
+    divider = melody[thisNote + 1];
+    if (divider > 0) {
+      // regular note, just proceed
+      noteDuration = (wholenote) / divider;
+    } else if (divider < 0) {
+      // dotted notes are represented with negative durations!!
+      noteDuration = (wholenote) / abs(divider);
+      noteDuration *= 1.2; // increases the duration in half for dotted notes
+    }
+
+    // we only play the note for 90% of the duration, leaving 10% as a pause
+    tone(speakerPin, melody[thisNote], noteDuration*0.9);
+
+    // Wait for the specief duration before playing the next note.
+    delay(noteDuration);
+    
+    // stop the waveform generation before the next note.
+    noTone(speakerPin);
+  }
 }

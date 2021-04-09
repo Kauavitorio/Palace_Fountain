@@ -1,5 +1,4 @@
 #include <SoftwareSerial.h>  
-#include <avr/wdt.h>
 #include <Servo.h>
 
 SoftwareSerial mySerial(10, 11); // RX, TX  
@@ -17,10 +16,12 @@ long int connectpass = 0;
 char state = 0;
 Servo myservo;
 int pos = 0;
+int playSong = 0;
 
 //  Extern Functions
 extern void putWater();
 extern void song();
+extern void beep();
 extern void StartEnconder();
 extern void StartEnconderSond();
 
@@ -29,27 +30,35 @@ void setup()
 {
   StartEnconderSond();
   StartEnconder(); 
-  //song();
-  wdt_disable();
+  song();
   pinMode(LED, OUTPUT);
   pinMode(LEDGREEN, OUTPUT);
   pinMode(LEDRED, OUTPUT);
   pinMode(speakerPin , OUTPUT);
-  myservo.attach(12);
-  myservo.write(0);  
+
+  //  Trun Off pins
   digitalWrite(LED, LOW);
   digitalWrite(LEDGREEN, LOW);
   digitalWrite(LEDRED, HIGH);
+
+  //  Set Servo port and position
+  myservo.attach(12);
+  myservo.write(0);  
+
   
   // Open serial communications and wait for port to open:  
   Serial.begin(115200);  
-  Serial.println("Bem Vindo!");  
+  Serial.println("-------------");
+  Serial.println("Welcome!\nSystem Booting, waiting for bluetooth connection!");  
+  Serial.println("-------------");
   // SoftwareSerial "com port" data rate. JY-MCU v1.03 defaults to 9600.  
   mySerial.begin(9600);
+
+
 }  
-   
 void loop()  
 {
+  
   while (mySerial.available() != 0){
   digitalWrite(LEDGREEN, LOW);
   digitalWrite(LEDRED, HIGH);
@@ -67,28 +76,33 @@ void loop()
   }
   
   if(data == password2){
-  digitalWrite(LED, HIGH); 
+  digitalWrite(LED, HIGH);
+  Serial.println("LED ON "); 
+  }
+  if(data == 78){
+  digitalWrite(LED, LOW); 
   Serial.println("LED OFF "); 
-
   }
   if(data == 00){
   digitalWrite(LED, LOW); 
-  Serial.println("LED OFF "); 
   digitalWrite(LEDGREEN, LOW);
   digitalWrite(LEDRED, HIGH);
-  wdt_enable(WDTO_1S);
+  Serial.println("Device has disconnected");
+  data = mySerial.parseInt();
   }
   if(data == 01){
-  digitalWrite(LEDGREEN, HIGH);
-  digitalWrite(LEDRED, LOW);
   beep(speakerPin, 1047, 100);
   delay(80);
   beep(speakerPin, 880, 100);
   delay(300);
+  digitalWrite(LEDGREEN, HIGH);
+  digitalWrite(LEDRED, LOW);
+  Serial.println("Device has been connected");
   }
 
-  
-  // Read device output if available.  
+
+  //  Commands for config bluetooth
+  //  Read device output if available.  
   /*if (mySerial.available()) 
   {  
      while(mySerial.available()) 
@@ -105,6 +119,11 @@ void loop()
     delay(10); // The DELAY!  
     mySerial.write(Serial.read());  
   }  */
+
+  /*
+  * AT
+  * AT+NAME:****
+  * AT+PSWD:""
+  */
    
 }// END loop()  
-
