@@ -6,16 +6,17 @@
 void putWater();
 void StartEnconder();
 
-extern int pumpLED;
 extern int speakerPin;
+extern const int LEDSystemOn;
 extern const int pump;
-
+extern const int nivel;
 
 
 void StartEnconder(){
-  pinMode(pumpLED, OUTPUT);
   pinMode(speakerPin , OUTPUT);
   pinMode(pump, OUTPUT);
+  pinMode(nivel, INPUT);
+  digitalWrite(pump, HIGH);
   // Open serial communications and wait for port to open:  
   Serial.begin(115200);  
   // SoftwareSerial "com port" data rate. JY-MCU v1.03 defaults to 9600.  
@@ -24,11 +25,24 @@ void StartEnconder(){
 
 
 void putWater(){
-  digitalWrite(pump, HIGH);
-  digitalWrite(pumpLED, HIGH);
-  delay(1000);
-  digitalWrite(pump, LOW);
-  digitalWrite(pumpLED, LOW);
+  int SensorNivel = digitalRead(nivel);
+    while (SensorNivel == 1){
+    SensorNivel = digitalRead(nivel);
+    Serial.print("Nivel: ");
+    Serial.println(SensorNivel);
+    digitalWrite(pump, HIGH);
+    delay(1000);
+    SensorNivel = digitalRead(nivel);
+    Serial.print("Nivel: ");
+    Serial.println(SensorNivel);
+    digitalWrite(pump, LOW);
+    delay(3000);
+    SensorNivel = digitalRead(nivel);
+    Serial.print("Nivel: ");
+    Serial.println(SensorNivel);
+    digitalWrite(pump, HIGH);
+    digitalWrite(LEDSystemOn, HIGH);
+    }
   /*Serial.println("Puting Water "); 
   for (pos = 0; pos <= 390; pos += 1) { // goes from 0 degrees to 380 degrees
     // in steps of 1 degree
@@ -47,4 +61,9 @@ void putWater(){
   delay(100);
   beep(speakerPin, NOTE_E5, 100);
   delay(500);*/
+}
+
+void CancelWater(){
+    digitalWrite(pump, HIGH);
+    digitalWrite(LEDSystemOn, HIGH);
 }
