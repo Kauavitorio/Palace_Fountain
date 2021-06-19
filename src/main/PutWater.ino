@@ -10,6 +10,8 @@ extern int speakerPin;
 extern const int LEDSystemOn;
 extern const int pump;
 extern const int nivel;
+extern void DisplayStatus();
+extern void beep();
 
 
 void StartEnconder(){
@@ -26,23 +28,18 @@ void StartEnconder(){
 
 void putWater(){
   int SensorNivel = digitalRead(nivel);
-    while (SensorNivel == 1){
-    SensorNivel = digitalRead(nivel);
-    Serial.print("Nivel: ");
-    Serial.println(SensorNivel);
-    digitalWrite(pump, HIGH);
-    delay(1000);
+    while (SensorNivel == 0){
     SensorNivel = digitalRead(nivel);
     Serial.print("Nivel: ");
     Serial.println(SensorNivel);
     digitalWrite(pump, LOW);
-    delay(3000);
-    SensorNivel = digitalRead(nivel);
-    Serial.print("Nivel: ");
-    Serial.println(SensorNivel);
+    DisplayStatus(2);
+    }
     digitalWrite(pump, HIGH);
     digitalWrite(LEDSystemOn, HIGH);
-    }
+    beep(speakerPin, 1047, 100);
+    beep(speakerPin, 932, 100);
+    DisplayStatus(1);
   /*Serial.println("Puting Water "); 
   for (pos = 0; pos <= 390; pos += 1) { // goes from 0 degrees to 380 degrees
     // in steps of 1 degree
@@ -61,6 +58,31 @@ void putWater(){
   delay(100);
   beep(speakerPin, NOTE_E5, 100);
   delay(500);*/
+}
+
+
+void testPump(){
+  int SensorNivel = digitalRead(nivel);
+    if (SensorNivel == 0){
+      digitalWrite(pump, LOW);
+      delay(500);
+      digitalWrite(pump, HIGH);
+      delay(500);
+      digitalWrite(pump, LOW);
+      delay(500);
+      digitalWrite(pump, HIGH);
+      }else{
+      beep(speakerPin, 1047, 100);
+      beep(speakerPin, 932, 100);
+      beep(speakerPin, 1047, 100);
+      beep(speakerPin, 932, 100);
+      beep(speakerPin, 1047, 100);
+      beep(speakerPin, 932, 100);
+      beep(speakerPin, 1047, 100);
+      beep(speakerPin, 932, 100);
+      beep(speakerPin, 1047, 100);
+      beep(speakerPin, 932, 100);
+      }
 }
 
 void CancelWater(){

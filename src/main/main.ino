@@ -19,6 +19,7 @@ extern void StartEnconder();
 extern void StartEnconderSond();
 extern void StartEnconderDisplay();
 extern void DisplayStatus();
+extern void testPump();
    
 void setup()   
 {  
@@ -28,7 +29,7 @@ void setup()
   pinMode(nivel, INPUT);
   StartEnconder();
   StartEnconderDisplay();
-  //song();
+  song();
   
   // Open serial communications and wait for port to open:  
   Serial.begin(115200);  
@@ -70,7 +71,7 @@ void loop()
             break;
             case 10:
                   Serial.println("Put Water");
-                  if (digitalRead(nivel) == 1){
+                  if (digitalRead(nivel) == 0){
                       putWater();
                   }else{
                     beep(speakerPin, 1047, 100);
@@ -82,6 +83,10 @@ void loop()
             break;
             case 12:
                   CancelWater();
+                  Serial.println("\nCancel Water");
+            break;
+            case 158:
+                  testPump();
                   Serial.println("\nCancel Water");
             break;
             }

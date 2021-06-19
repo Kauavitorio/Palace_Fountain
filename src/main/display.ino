@@ -25,6 +25,7 @@ pinMode(E, OUTPUT);
 pinMode(F, OUTPUT);
 pinMode(G, OUTPUT);
 pinMode(PT, OUTPUT);
+pinMode(LED_BUILTIN, OUTPUT);
 startdisplay();
 }
 
@@ -141,6 +142,7 @@ digitalWrite(D, l);
 digitalWrite(E, l);
 digitalWrite(F, l);
 digitalWrite(G, d);
+digitalWrite(LED_BUILTIN, HIGH);
 delay(100);
 
 digitalWrite(A, d); //acende os leds que representam o número 1
@@ -150,6 +152,7 @@ digitalWrite(D, d);
 digitalWrite(E, d);
 digitalWrite(F, d);
 digitalWrite(G, d);
+digitalWrite(LED_BUILTIN, d);
 delay(100);
 
 digitalWrite(A, l); //acende os leds que representam o número 2
@@ -159,6 +162,7 @@ digitalWrite(D, l);
 digitalWrite(E, l);
 digitalWrite(F, d);
 digitalWrite(G, l);
+digitalWrite(LED_BUILTIN, HIGH);
 delay(100);
 
 digitalWrite(A, l); //acende os leds que representam o número 3
@@ -168,6 +172,7 @@ digitalWrite(D, l);
 digitalWrite(E, d);
 digitalWrite(F, d);
 digitalWrite(G, l);
+digitalWrite(LED_BUILTIN, d);
 delay(100);
 
 digitalWrite(A, d); //acende os leds que representam o número 4
@@ -177,6 +182,7 @@ digitalWrite(D, d);
 digitalWrite(E, d);
 digitalWrite(F, l);
 digitalWrite(G, l);
+digitalWrite(LED_BUILTIN, HIGH);
 delay(100);
 
 digitalWrite(A, l); //acende os leds que representam o número 5
@@ -186,6 +192,7 @@ digitalWrite(D, l);
 digitalWrite(E, d);
 digitalWrite(F, l);
 digitalWrite(G, l);
+digitalWrite(LED_BUILTIN, d);
 delay(100);
 
 digitalWrite(A, d); //acende os leds que representam o número 6
@@ -195,6 +202,7 @@ digitalWrite(D, l);
 digitalWrite(E, l);
 digitalWrite(F, l);
 digitalWrite(G, l);
+digitalWrite(LED_BUILTIN, HIGH);
 delay(100);
 
 digitalWrite(A, l); //acende os leds que representam o número 7
@@ -204,6 +212,7 @@ digitalWrite(D, d);
 digitalWrite(E, d);
 digitalWrite(F, d);
 digitalWrite(G, d);
+digitalWrite(LED_BUILTIN, d);
 delay(100);
 
 digitalWrite(A, l); //acende os leds que representam o número 8
@@ -213,6 +222,7 @@ digitalWrite(D, l);
 digitalWrite(E, l);
 digitalWrite(F, l);
 digitalWrite(G, l);
+digitalWrite(LED_BUILTIN, HIGH);
 delay(100);
 
 digitalWrite(A, l); //acende os leds que representam o número 9
@@ -222,6 +232,7 @@ digitalWrite(D, d);
 digitalWrite(E, d);
 digitalWrite(F, l);
 digitalWrite(G, l);
+digitalWrite(LED_BUILTIN, d);
 delay(100);
 digitalWrite(A, l); //acende os leds que representam o número 8
 digitalWrite(B, l);
@@ -230,6 +241,7 @@ digitalWrite(D, l);
 digitalWrite(E, l);
 digitalWrite(F, l);
 digitalWrite(G, l);
+digitalWrite(LED_BUILTIN, HIGH);
 delay(100);
 
 digitalWrite(A, l); //acende os leds que representam o número 7
@@ -239,6 +251,7 @@ digitalWrite(D, d);
 digitalWrite(E, d);
 digitalWrite(F, d);
 digitalWrite(G, d);
+digitalWrite(LED_BUILTIN, d);
 delay(100);
 digitalWrite(A, l); //acende os leds que representam o número 0
 digitalWrite(B, l);
@@ -247,6 +260,7 @@ digitalWrite(D, l);
 digitalWrite(E, l);
 digitalWrite(F, l);
 digitalWrite(G, d);
+digitalWrite(LED_BUILTIN, HIGH);
 delay(200);
         digitalWrite(A, d); //acende os leds que representam o número 1
         digitalWrite(B, d);
@@ -255,6 +269,9 @@ delay(200);
         digitalWrite(E, d);
         digitalWrite(F, d);
         digitalWrite(G, d);
+digitalWrite(LED_BUILTIN, d);
+delay(100);
+digitalWrite(LED_BUILTIN, l);
 }
 
 void blinkDP() { // Faz o DP piscar 2 vezes.
@@ -262,11 +279,13 @@ void blinkDP() { // Faz o DP piscar 2 vezes.
   for (int i=0; i<=3; i++) {
     if (ligaPonto)  {
       digitalWrite(PT, l);
+      digitalWrite(LED_BUILTIN, l);
     }   else  {
       digitalWrite(PT, d);
+      digitalWrite(LED_BUILTIN, d);
     }
     ligaPonto = !ligaPonto;
-    delay(1000);
+    delay(500);
   }
   
 } 
