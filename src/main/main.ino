@@ -93,6 +93,8 @@ void loop()
         }
      } 
   }
+
+  //  Code to configure 
  /* 
   *  // Read device output if available.  
   if (mySerial.available()) 
